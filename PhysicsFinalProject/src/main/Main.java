@@ -24,6 +24,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import java.awt.Font;
+import java.awt.Toolkit;
 
 public class Main extends JFrame {
 
@@ -74,6 +75,7 @@ public class Main extends JFrame {
 	 * Create the frame.
 	 */
 	public Main() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/com/images/Iconx64.png")));
 		setUndecorated(true);		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 556);
