@@ -35,6 +35,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
+import javax.swing.JTextArea;
+import java.awt.event.MouseEvent;
 
 public class Main extends JFrame {
 
@@ -66,6 +68,8 @@ public class Main extends JFrame {
     
     private double presureOne = 0;
     private double presureTwo = 0;
+    
+    private JPanel help;
     
     private JTextField massTwoField;
 
@@ -137,6 +141,21 @@ public class Main extends JFrame {
 		titleLBL = new JLabel("Simulacion del principio de Pascal");
 		titleLBL.addMouseListener(new MouseAdapter() {			
 		});
+		
+		CustomPanel infoContainer = new CustomPanel();
+		infoContainer.setBackground(new Color(128, 128, 255));
+		infoContainer.setRadius(55);
+		infoContainer.setBounds(182, 130, 535, 229);
+		startWindow.add(infoContainer);
+		infoContainer.setLayout(null);
+		
+		JTextArea txtrEsteProgramaEs = new JTextArea();
+		txtrEsteProgramaEs.setText("       Este Programa es una simulacion del Principio de Pascal el cual\r\n          esta directamente relacionado con los fluidos confinados y \r\n          como la presion aplicada en cualquier punto del sistema\r\n              se ejerce uniformemente a lo largo de todo el fluido\r\n \r\n\r\n        En esta simulacion podra apreciar como se aplica este principio\r\n           en tiempo real a dos pistones con una masa sobre ellos\r\n              y como la fuerza puede llegar a multiplicarse gracias\r\n               la presion ejercida en conductos mas estrechos");
+		txtrEsteProgramaEs.setFont(new Font("Tahoma", Font.BOLD, 14));
+		txtrEsteProgramaEs.setForeground(new Color(255, 255, 255));
+		txtrEsteProgramaEs.setBackground(new Color(128, 128, 255));
+		txtrEsteProgramaEs.setBounds(23, 22, 491, 183);
+		infoContainer.add(txtrEsteProgramaEs);
 		titleLBL.setHorizontalAlignment(SwingConstants.CENTER);
 		titleLBL.setFont(new Font("Tahoma", Font.BOLD, 24));
 		titleLBL.setBounds(90, 10, 720, 67);
@@ -185,6 +204,66 @@ public class Main extends JFrame {
 				playSoundEffect("/songs/stalker.wav");
 			}
 		});
+		
+		CustomButton infoBTN = new CustomButton();
+		infoBTN.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				help	.setVisible(true);
+			}
+		});
+		
+		help = new JPanel();
+		help.setVisible(false);
+		help.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				//TODO
+			}
+		});
+		help.setBounds(0, 0, 900, 520);
+		help.setBackground(new Color(0,0,0,123));		
+		simulationWindow.add(help);
+		help.setLayout(null);
+		
+		CustomButton helpOKBTN = new CustomButton();
+		helpOKBTN.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				help.setVisible(false);
+			}
+		});
+		helpOKBTN.setText("OK");
+		helpOKBTN.setRadius(35);
+		helpOKBTN.setColorOver(new Color(143, 240, 164));
+		helpOKBTN.setColorClick(Color.WHITE);
+		helpOKBTN.setColor(new Color(51, 209, 122));
+		helpOKBTN.setBorderColor(new Color(38, 162, 105));
+		helpOKBTN.setBackground(new Color(51, 209, 122));
+		helpOKBTN.setBounds(388, 448, 148, 40);
+		help.add(helpOKBTN);
+		
+		CustomPanel customPanel_2 = new CustomPanel();
+		customPanel_2.setBackground(new Color(128, 128, 255));
+		customPanel_2.setRadius(55);
+		customPanel_2.setBounds(105, 90, 696, 247);
+		help.add(customPanel_2);
+		customPanel_2.setLayout(null);
+		
+		JTextArea txtrIngrese = new JTextArea();
+		txtrIngrese.setForeground(new Color(255, 255, 255));
+		txtrIngrese.setFont(new Font("Tahoma", Font.BOLD, 14));
+		txtrIngrese.setText("1 - Ingrese los pesos correspondientes en los campos M1 y M2\r\n2 - Pulse insertar y vea como reacciona el programa\r\n3 - Puede pulsar el boton equilibrar para ver el sistema equilibrado\r\n\r\n\r\nElaborado por:\r\nIsaac Dahir Rodriguez Gutierrez.\r\nEngel Giovany Mendoza Polanco.\r\n\r\nGrupo: 2-M4-CO");
+		txtrIngrese.setBackground(new Color(128, 128, 255));
+		txtrIngrese.setBounds(69, 34, 577, 184);
+		customPanel_2.add(txtrIngrese);
+		infoBTN.setText("?");
+		infoBTN.setRadius(35);
+		infoBTN.setColorOver(new Color(143, 240, 164));
+		infoBTN.setColorClick(Color.WHITE);
+		infoBTN.setColor(new Color(51, 209, 122));
+		infoBTN.setBorderColor(new Color(38, 162, 105));
+		infoBTN.setBackground(new Color(51, 209, 122));
+		infoBTN.setBounds(10, 460, 75, 40);
+		simulationWindow.add(infoBTN);
 		cstmbtnRegresar.setText("Regresar");
 		cstmbtnRegresar.setRadius(35);
 		cstmbtnRegresar.setColorOver(new Color(143, 240, 164));
@@ -512,7 +591,7 @@ public class Main extends JFrame {
 				leftWeightLBL.setText(massOne + " Kg");
 				rightWeightLBL.setText(massTwo + " Kg");
 				
-				F1ToF2LBL.setText("F1 -> F2 = " + forceOne * (AREA_2 / AREA_1) + " N");
+				F1ToF2LBL.setText(String.format("F1 -> F2 = %.2fN", forceOne * (AREA_2 / AREA_1)));
 				
 				double massTwoEquilibrium = massOne * (AREA_2 / AREA_1);
 				M2equilibriumLBL.setText("M2 = " + massTwoEquilibrium + " Kg");
@@ -588,7 +667,7 @@ public class Main extends JFrame {
 		lblNewLabel_3_2.setBounds(342, 48, 33, 30);
 		customPanel.add(lblNewLabel_3_2);
 		
-		JLabel lblNewLabel_3_2_1 = new JLabel("M2 =");
+		JLabel lblNewLabel_3_2_1 = new JLabel("M1 =");
 		lblNewLabel_3_2_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_3_2_1.setBounds(192, 48, 33, 30);
 		customPanel.add(lblNewLabel_3_2_1);
