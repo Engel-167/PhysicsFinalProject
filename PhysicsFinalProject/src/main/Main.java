@@ -16,7 +16,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import com.UIComponents.NavigationBar;
+import com.UIComponents.RainBow;
 import com.UIComponents.CustomButton;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import com.UIComponents.CustomPanel;
 import javax.swing.border.LineBorder;
@@ -25,12 +33,26 @@ import javax.swing.event.DocumentListener;
 
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.io.IOException;
 
 public class Main extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel mainWindow;
+	private JLabel titleLBL;
 	private JTextField massOneField;
+	private RainBow rainBow;
+	private Clip clip;
+	
+	 /*private int colorIndex = 0;
+	    private final Color[] blueGradientColors = {
+	        new Color(0, 0, 255), // Blue
+	        new Color(0, 128, 255), // Light Blue
+	        new Color(0, 255, 255), // Cyan
+	        new Color(0, 128, 255), // Light Blue
+	        new Color(0, 0, 255) // Blue
+	    };*/
 	
 	private static final double GRAVITY = 9.81; // m/s^2
     private final int AREA_1 = 1; // en metros
@@ -63,18 +85,20 @@ public class Main extends JFrame {
 				try {
 					Main frame = new Main();
 					frame.setLocationRelativeTo(null);
-					frame.setVisible(true);
+					frame.setVisible(true);		
+					frame.playSong("/songs/song.wav");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		});
+		});		
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public Main() {
+		rainBow = new RainBow();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/com/images/Iconx64.png")));
 		setUndecorated(true);		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,11 +127,23 @@ public class Main extends JFrame {
 				CardLayout cl = (CardLayout) windowChanger.getLayout();
 				cl.show(windowChanger, "name_83845947942100");
 				
+				rainBow.stopRainbowEffect();
+				
+				playSoundEffect("/songs/shadow.wav");
+				
 			}
 		});
-		cstmbtnPascal.setText("Pascal");
+		
+		titleLBL = new JLabel("Simulacion del principio de Pascal");
+		titleLBL.addMouseListener(new MouseAdapter() {			
+		});
+		titleLBL.setHorizontalAlignment(SwingConstants.CENTER);
+		titleLBL.setFont(new Font("Tahoma", Font.BOLD, 24));
+		titleLBL.setBounds(90, 10, 720, 67);
+		startWindow.add(titleLBL);
+		cstmbtnPascal.setText("Iniciar");
 		cstmbtnPascal.setRadius(35);
-		cstmbtnPascal.setBounds(360, 209, 178, 122);
+		cstmbtnPascal.setBounds(361, 400, 178, 74);
 		cstmbtnPascal.setColorOver(new Color(143, 240, 164));
 		cstmbtnPascal.setColorClick(Color.WHITE);
 		cstmbtnPascal.setColor(new Color(51, 209, 122));
@@ -125,6 +161,39 @@ public class Main extends JFrame {
 		simulationWindow.setBackground(new Color(128, 255, 255));
 		windowChanger.add(simulationWindow, "name_83845947942100");
 		simulationWindow.setLayout(null);
+		
+		CustomButton cstmbtnRegresar = new CustomButton();
+		cstmbtnRegresar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				CardLayout cl = (CardLayout) windowChanger.getLayout();
+				cl.show(windowChanger, "name_83828197695300");
+				
+				titleLBL.setText("Simulacion del principio de Pascal");
+				titleLBL.setForeground(Color.BLACK);
+
+				new Thread(() -> {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					rainBow.startRainbowEffect(titleLBL);
+				}).start();		
+				
+				playSoundEffect("/songs/stalker.wav");
+			}
+		});
+		cstmbtnRegresar.setText("Regresar");
+		cstmbtnRegresar.setRadius(35);
+		cstmbtnRegresar.setColorOver(new Color(143, 240, 164));
+		cstmbtnRegresar.setColorClick(Color.WHITE);
+		cstmbtnRegresar.setColor(new Color(51, 209, 122));
+		cstmbtnRegresar.setBorderColor(new Color(38, 162, 105));
+		cstmbtnRegresar.setBackground(new Color(51, 209, 122));
+		cstmbtnRegresar.setBounds(387, 464, 148, 40);
+		simulationWindow.add(cstmbtnRegresar);
 		
 		CustomPanel customPanel_1 = new CustomPanel();
 		customPanel_1.setBackground(new Color(249, 244, 160));
@@ -216,13 +285,13 @@ public class Main extends JFrame {
 		JLabel M2equilibriumLBL = new JLabel("M2= M1(A2/A1)");
 		M2equilibriumLBL.setHorizontalAlignment(SwingConstants.CENTER);
 		M2equilibriumLBL.setFont(new Font("Tahoma", Font.BOLD, 12));
-		M2equilibriumLBL.setBounds(10, 287, 148, 23);
+		M2equilibriumLBL.setBounds(10, 313, 148, 23);
 		customPanel_1.add(M2equilibriumLBL);
 		
 		JLabel M1equilibriumLBL = new JLabel("M1= M2(A1/A2)");
 		M1equilibriumLBL.setHorizontalAlignment(SwingConstants.CENTER);
 		M1equilibriumLBL.setFont(new Font("Tahoma", Font.BOLD, 12));
-		M1equilibriumLBL.setBounds(10, 313, 148, 23);
+		M1equilibriumLBL.setBounds(10, 287, 148, 23);
 		customPanel_1.add(M1equilibriumLBL);
 		
 		CustomButton organizeBTN = new CustomButton();
@@ -245,6 +314,8 @@ public class Main extends JFrame {
 					simulate(massOneEquilibrium, massTwo, leftPiston, rightPiston);
 				}
 				
+				
+				playSoundEffect("/songs/underwater.wav");
 			}
 		});
 		organizeBTN.setText("Equilibrar");
@@ -345,7 +416,7 @@ public class Main extends JFrame {
 			}
 		});
 		massOneField.setColumns(10);
-		massOneField.setBounds(199, 48, 70, 30);
+		massOneField.setBounds(228, 48, 51, 30);
 		customPanel.add(massOneField);	
 		
 		rightPiston.add(rightWeightLBL);
@@ -411,6 +482,8 @@ public class Main extends JFrame {
 		startBTN.addActionListener(new ActionListener() {					
 			public void actionPerformed(ActionEvent e) {
 				
+				playSoundEffect("/songs/click.wav");
+				
 				if (!massOneField.getText().isEmpty()) {
 					massOne = Double.parseDouble(massOneField.getText());
 				} else {
@@ -427,14 +500,14 @@ public class Main extends JFrame {
 				forceOne = massOne * GRAVITY;
 				forceTwo = massTwo * GRAVITY;
 				
-				forceOneLBL.setText("F1 = " + forceOne + " N");
-				forceTwoLBL.setText("F2 = " + forceTwo + " N");
+				forceOneLBL.setText(String.format("F1 = %.2fN", forceOne));
+				forceTwoLBL.setText(String.format("F1 = %.2fN", forceTwo));
 				
 				presureOne = forceOne / AREA_1;
 				presureTwo = forceTwo / AREA_2;
 				
-				PresureOneLBL.setText("P1 = " + presureOne + " Pa");
-				PresureTwoLBL.setText("P2 = " + presureTwo + " Pa");
+				PresureOneLBL.setText(String.format("P1 = %.2fPa", presureOne));
+				PresureTwoLBL.setText(String.format("P1 = %.2fPa", presureTwo));
 				
 				leftWeightLBL.setText(massOne + " Kg");
 				rightWeightLBL.setText(massTwo + " Kg");
@@ -491,7 +564,7 @@ public class Main extends JFrame {
 			}		
 		});
 		massTwoField.setColumns(10);
-		massTwoField.setBounds(339, 48, 70, 30);
+		massTwoField.setBounds(376, 48, 45, 30);
 		customPanel.add(massTwoField);
 		
 		JLabel lblNewLabel_2 = new JLabel("Ingrese el peso sobre los pistones");
@@ -502,13 +575,23 @@ public class Main extends JFrame {
 		
 		JLabel lblNewLabel_3 = new JLabel("Kg");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_3.setBounds(272, 48, 33, 30);
+		lblNewLabel_3.setBounds(282, 48, 33, 30);
 		customPanel.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_3_1 = new JLabel("Kg");
 		lblNewLabel_3_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_3_1.setBounds(417, 48, 33, 30);
+		lblNewLabel_3_1.setBounds(429, 48, 27, 30);
 		customPanel.add(lblNewLabel_3_1);
+		
+		JLabel lblNewLabel_3_2 = new JLabel("M2 =");
+		lblNewLabel_3_2.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_3_2.setBounds(342, 48, 33, 30);
+		customPanel.add(lblNewLabel_3_2);
+		
+		JLabel lblNewLabel_3_2_1 = new JLabel("M2 =");
+		lblNewLabel_3_2_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_3_2_1.setBounds(192, 48, 33, 30);
+		customPanel.add(lblNewLabel_3_2_1);
 		
 		JLabel backgroundLBL_1 = new JLabel("");
 		backgroundLBL_1.setIcon(new ImageIcon(Main.class.getResource("/com/images/background.jpg")));
@@ -518,6 +601,7 @@ public class Main extends JFrame {
 		NavigationBar navigationBar = new NavigationBar(this, mainWindow);
 		navigationBar.setBounds(0, 0, 900, 40);
 		mainWindow.add(navigationBar);
+		rainBow.startRainbowEffect(titleLBL);
 	}
 	
 	private void simulate(double massOne, double massTwo, JPanel leftPiston, JPanel rightPiston) {
@@ -571,7 +655,70 @@ public class Main extends JFrame {
 	    });
 	    
 	    // Iniciar la animación
-	    timer.start();
+	    timer.start();	    
+	}
+	
+
+	private void playSong(String filePath) {
+		try {
+			// Use getResource to load the file from the classpath
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.class.getResource(filePath));
+
+			// Convert the audio format to a supported format
+			AudioFormat baseFormat = audioInputStream.getFormat();
+			AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16,
+					baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
+			AudioInputStream decodedAudioInputStream = AudioSystem.getAudioInputStream(decodedFormat, audioInputStream);
+
+			clip = AudioSystem.getClip();
+			clip.open(decodedAudioInputStream);
+			clip.start();
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
 	}
 
+
+
+
+	private void playSoundEffect(String filePath) {
+	    try {
+	        // Use getResource to load the file from the classpath
+	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Main.class.getResource(filePath));
+	
+	        // Convert the audio format to a supported format
+	        AudioFormat baseFormat = audioInputStream.getFormat();
+	        AudioFormat decodedFormat = new AudioFormat(
+	            AudioFormat.Encoding.PCM_SIGNED,
+	            baseFormat.getSampleRate(),
+	            16,
+	            baseFormat.getChannels(),
+	            baseFormat.getChannels() * 2,
+	            baseFormat.getSampleRate(),
+	            false
+	        );
+	        AudioInputStream decodedAudioInputStream = AudioSystem.getAudioInputStream(decodedFormat, audioInputStream);
+	
+	        Clip soundClip = AudioSystem.getClip();
+	        soundClip.open(decodedAudioInputStream);
+	        soundClip.start();
+	    } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
+	
+	private void stopSong() {
+        if (clip != null) {
+            clip.stop();
+            clip.close();
+        }
+    }
+
+    @Override
+    public void dispose() {
+        stopSong();
+        super.dispose();
+    }
 }

@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import com.Fonts.pack.FontLoader;
+import javax.swing.ImageIcon;
 
 public class NavigationBar extends JPanel {
 	
@@ -139,7 +140,7 @@ public class NavigationBar extends JPanel {
 			}
 		});
 		windowTitle.setFont(GeistMonoRegular.deriveFont(14f));
-		windowTitle.setIcon(null);
+		windowTitle.setIcon(new ImageIcon(NavigationBar.class.getResource("/com/images/Iconx32.png")));
 		windowTitle.setBounds(12, 5, 200, 30);
 		navigationBar.add(windowTitle);
 	}

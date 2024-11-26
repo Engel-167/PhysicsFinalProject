@@ -17,11 +17,11 @@ public class RainBow {
 	{
 		// Arcoiris de colores
         rainbowColors = new ArrayList<>();
-        rainbowColors.add(Color.RED);
-        rainbowColors.add(Color.ORANGE);
-        rainbowColors.add(Color.YELLOW);
-        rainbowColors.add(Color.GREEN);
-        rainbowColors.add(Color.CYAN);
+        rainbowColors.add(new Color(0, 0, 255));
+        rainbowColors.add(new Color(0, 128, 255));
+        rainbowColors.add(new Color(0, 255, 255));
+        rainbowColors.add(new Color(0, 128, 255));
+        rainbowColors.add(new Color(0, 0, 255));
         rainbowColors.add(Color.BLUE);
         rainbowColors.add(Color.MAGENTA);
         
